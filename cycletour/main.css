@@ -1,0 +1,146 @@
+#main {
+	width: 960px; 
+	margin:	0 auto;
+	font-family: 	helvetica;
+}
+
+#debug {
+	width: 100%;
+}
+
+#locations {
+	width: 100%;
+	overflow: auto;
+	margin-bottom: 1em;
+}    
+
+.location_card {
+	float: 			left;
+	width: 			190px;            
+	height:			250px;
+	border: 		1px solid #ccc;
+	border-right: 	0;
+	position:		relative;
+	
+}                   
+
+	.location_card:last-child {
+		border-right: 1px solid #ccc;
+	}
+
+	.location_card b {
+		position:	absolute;
+		left: 		0;
+		bottom:		0;
+		background:	#ccc;
+		color:		#fff;
+		padding:	0 1em;
+	}
+	
+#sectors {
+	width: 100%;
+	overflow: auto;
+	margin-bottom: 1em;
+}
+
+	#sectors .sector {
+		float: 			left;
+		width: 5%;
+		height: 20px;
+	}
+	
+#teams {
+	overflow: auto;
+	width: 100%;    
+}
+	.team {
+		float: 			left;
+		width: 			190px;  
+		height:			250px;
+		border: 		1px solid #ccc;
+		border-right: 	0;
+		position:		relative;
+		padding:	1em;
+	}
+	
+	.team:last-child {
+		border-right: 1px solid #ccc;
+	}    
+	
+	.team b {
+		position:	absolute;
+		left: 		0;
+		bottom:		0;
+		background:	#ccc;
+		color:		#fff;
+		padding:	0 1em;
+	}
+	
+	/* rider rows */
+	.rider {
+		position: relative;
+		border-bottom: 1px solid #ccc;
+		margin-bottom: .5em;
+		background: #fff;
+	}
+	.rider .id { display: none; }
+	.rider .name { display: block; }
+	
+	
+	.rider .stats {      
+	    display: 	block; 
+		overflow: 	hidden;
+	}     
+	
+		.rider .stats span { display: block; width: 1em; text-align: center; float: left;}
+		
+	   
+		.flat {
+			background: -webkit-gradient(linear, 0% 0%, 0% 78%, from(#FFFFFF), to(#00FF33), color-stop(.6,#FFFFFF),color-stop(.6,#A8A8A8));
+		}
+		.downhill {
+			background: -webkit-gradient(linear, 75% 0%, 0% 100%, from(#FFFFFF), to(#1FAFED), color-stop(.4,#FFFFFF),color-stop(.4,#A8A8A8));
+		}
+		.hill {
+			background: -webkit-gradient(linear, 0% 0%, 25% 100%, from(#FFFFFF), to(#FFFF42), color-stop(.6,#FFFFFF),color-stop(.6,#A8A8A8));
+		}
+	
+		.cobbles {
+			background-image: -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.25, #CCC), color-stop(.25, transparent), to(transparent)),
+							  -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.25, #CCC), color-stop(.25, transparent), to(transparent)),
+							  -webkit-gradient(linear, 0 0, 100% 100%, color-stop(.75, transparent), color-stop(.75, #CCC)),
+						  	  -webkit-gradient(linear, 0 100%, 100% 0, color-stop(.75, transparent), color-stop(.75, #CCC));
+		}
+		
+		.mountain {
+			background: -webkit-gradient(linear, 0% 0%, 50% 100%, from(#FFFFFF), to(#FF0000), color-stop(.5,#FFFFFF),color-stop(.5,#A8A8A8));
+		}           
+	
+		.sprint {
+			background: #00ff00;
+		}
+	
+	.rider .energy {
+		display: 	block;
+		background: #00ff00;
+		font-size: 	0;
+		height:		5px;
+		overflow: auto;  
+	} 
+	
+	.rider .speed,
+	.rider .form {
+		display: block;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+	
+		.rider .speed a {
+			text-decoration: 	none;
+			font-weight: 		bold;
+			font-size: 			.9em;
+			vertical-align: 	top;
+		}
+	
+	
