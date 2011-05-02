@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=utf8>                
+<link rel="stylesheet" href="reset.css" type="text/css" media="screen" />
+<link rel="stylesheet" href="main.css" type="text/css" media="screen" />
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script> 
+<script src="locations.js"></script>
+<script src="riders.js"></script>
+<script>                   
+
+var number_of_teams = 3;
+var number_of_sectors = 18;
+
+var teams = [];            
+var sectors = [];    
+
+var sector_types = [
+	{ "name":"flat" },
+	{ "name":"hill" },
+	{ "name":"mountain" },
+	{ "name":"downhill" },
+	{ "name":"cobbles" },
+	{ "name":"sprint" }
+];
+
+var rider_energy = 110;
+
+var debug = function(str) {
+	$('#debug').html(str + '\n' + $('#debug').html() );
+};
+
+var add_sector = function(type) { 
+	var total_sectors = $('#sectors .sector');
+	var label = (type == "sprint") ? "S" : "";
+	
+	$('#sectors').append('<div id="sector'+(total_sectors+1)+'" class="sector '+type+'">'+label+'</div>'); 	
+};
+
+$(document).ready(function() {
+	//randomly sort riders
+	riders.sort(function() {return 0.5 - Math.random()});
+	
+	//set up teams
+	for (var i=0; i<number_of_teams; i++) {
+		teams.push([]);
+	}                                 
+	
+	// randomly generate RACE PROFILE
+	// a FLAT section is always first   
+	sectors.push(sector_types[0]);
+	for (var i=0; i<number_of_sectors; i++) {
+		sectors.push( sector_types[Math.floor(Math.random()*sector_types.length)] );
+	}
+	// a SPRINT is always last
+	sectors.push(sector_types[5]);
+	    
+	for (var sector in sectors) {                                                                
+		var s = sectors[sector];
+		add_sector(s.name);   
+	}
+	
+	//randomly place RIDERS into TEAMS    
+	i=0;
+	for(var rider in riders) {
+		if (i>number_of_teams-1) { i = 0; } 
+		riders[rider].energy = rider_energy;
+		riders[rider].form = Math.ceil(Math.random()*6);
+		if (riders[rider].form == 6) { riders[rider].form = 3; }
+		
+		teams[i].push(riders[rider]);
+		i++;
+	}
+	                         
+	
+	for(var loc in locations) {
+		var location = $('<div class="location_card" id="'+locations[loc].shortname+'"><b>'+locations[loc].name+'</b></div>');
+		$('#locations').append(location);
+	}
+	
+	//add teams to interface 
+	//foreach TEAM
+	for(var team in teams) {
+		
+		//foreach RIDER in TEAM                          
+		for (var r in teams[team]) {
+			                        
+			var rider = teams[team][r]; 
+			
+			//create RIDER ROW in TEAM box
+			var rider_row = $('<div class="rider"></div>').attr("id","rider"+rider.id);
+			                                                 
+			//add HTML data attributes to rider rows
+			//for each attribute of the rider, add it as a span to the rider ROW
+			$.each(rider,function(i,j) {
+				
+				//if the attribute is an object (like STATS), make a container
+				//and fill with the sub-attribs
+				//e.g. <stats><hills/><cobbles /><sprints /></stats>
+				if (typeof j == "object") {
+				    var row = $('<span class="'+i+'"></span>');
+					$.each(j, function(name, val) {
+						row.append('<span class="'+name+'">'+val+'</span>');
+					});
+					rider_row.append(row); 
+				} else {
+				    rider_row.append('<span class="'+i+'">'+j+'</span>');
+				}
+				rider_row.data(i,j); 
+				
+			});
+			
+			//attach RIDER to TEAM box
+			$('#team'+team).append(rider_row);
+			
+			//place RIDERS in the PELOTON
+			//randomly between front, middle and rear
+			var rider_row = $('<div class="rider">'+rider.name+'</div>');
+			var peloton_sections = ["rear","middle","front"];
+			var peloton_position = Math.floor(Math.random()*3);   
+			
+			//set initial rider speed to 1 (rear), 2 (middle), 3 (front)
+			rider.speed = peloton_position+1;    
+			rider_row.append('<span class="speed"><a href="" class="down">&or;</a>'+rider.speed+'<a href="" class="up">&and;</a></span>');
+			rider_row.append('<span class="energy">'+rider.energy+'</span>');
+			$('#locations #peloton-'+peloton_sections[peloton_position]).append(rider_row); 
+		 			
+		}
+	} 
+	
+	//debug rider data in console
+	$('#teams .rider').click(function() { 
+		console.log($(this).data());
+	});                   
+	                       
+});
+
+</script>
+</head>
+<body>                                                                                 
+<div id="main">
+	 
+	<div id="locations"><h2>peloton</h2></div> 
+	<div id="sectors"><h2>sectors</h2></div>
+	<div id="teams">                              
+		<h2>teams</h2>
+		<div id="team0" class="team"><b>team 1</b></div>
+		<div id="team1" class="team"><b>team 2</b></div>
+		<div id="team2" class="team"><b>team 3</b></div>
+	</div>         
+</div>
+
+<div id="debug"></div>
+ 
+</body>
+</html>
