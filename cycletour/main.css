@@ -45,8 +45,12 @@
 
 	#sectors .sector {
 		float: 			left;
-		width: 5%;
+		width: 4%;
 		height: 20px;
+	}
+	
+	#sectors .sector.current {
+		border: 1px solid #f00;
 	}
 	
 #teams {
