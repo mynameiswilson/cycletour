@@ -11,7 +11,8 @@
 <script>                   
 
 var number_of_teams = 3;
-var number_of_sectors = 18;
+var number_of_sectors = 20;
+var current_sector = 1;
 
 var teams = [];            
 var sectors = [];    
@@ -32,11 +33,29 @@ var debug = function(str) {
 };
 
 var add_sector = function(type) { 
-	var total_sectors = $('#sectors .sector');
+	var total_sectors = $('#sectors .sector').length;
 	var label = (type == "sprint") ? "S" : "";
 	
 	$('#sectors').append('<div id="sector'+(total_sectors+1)+'" class="sector '+type+'">'+label+'</div>'); 	
 };
+     
+var process_sector = function() {
+	//process riders from front group back to cars
+	//this gets all location cards then reverses the order   
+	$( $('#locations .location_card').get().reverse() ).each(function(i,val) {
+		$(".rider",val).each(function(j,rider) {
+			console.log( $(rider).data() );
+		});
+	});
+	
+	//set current sector++
+	if (current_sector < number_of_sectors) {
+		current_sector++;                        
+	}   
+	$('#sectors .sector').removeClass("current");
+	$('#sector'+current_sector).addClass("current");
+};
+
 
 $(document).ready(function() {
 	//randomly sort riders
@@ -50,7 +69,7 @@ $(document).ready(function() {
 	// randomly generate RACE PROFILE
 	// a FLAT section is always first   
 	sectors.push(sector_types[0]);
-	for (var i=0; i<number_of_sectors; i++) {
+	for (var i=0; i<number_of_sectors-2; i++) {
 		sectors.push( sector_types[Math.floor(Math.random()*sector_types.length)] );
 	}
 	// a SPRINT is always last
@@ -60,6 +79,8 @@ $(document).ready(function() {
 		var s = sectors[sector];
 		add_sector(s.name);   
 	}
+	
+	$('#sector1').addClass("current");
 	
 	//randomly place RIDERS into TEAMS    
 	i=0;
@@ -73,7 +94,7 @@ $(document).ready(function() {
 		i++;
 	}
 	                         
-	
+	//place PELOTON CARDS into ORDER
 	for(var loc in locations) {
 		var location = $('<div class="location_card" id="'+locations[loc].shortname+'"><b>'+locations[loc].name+'</b></div>');
 		$('#locations').append(location);
@@ -117,17 +138,27 @@ $(document).ready(function() {
 			//place RIDERS in the PELOTON
 			//randomly between front, middle and rear
 			var rider_row = $('<div class="rider">'+rider.name+'</div>');
+			
 			var peloton_sections = ["rear","middle","front"];
 			var peloton_position = Math.floor(Math.random()*3);   
 			
 			//set initial rider speed to 1 (rear), 2 (middle), 3 (front)
-			rider.speed = peloton_position+1;    
+			rider.speed = peloton_position+1;   
+			
+			rider_row.data('name',rider.name);
+			rider_row.data('speed',rider.speed);
+			rider_row.data('energy',rider.energy);
+			 
 			rider_row.append('<span class="speed"><a href="" class="down">&or;</a>'+rider.speed+'<a href="" class="up">&and;</a></span>');
 			rider_row.append('<span class="energy">'+rider.energy+'</span>');
 			$('#locations #peloton-'+peloton_sections[peloton_position]).append(rider_row); 
 		 			
 		}
-	} 
+	}
+	
+	$('#nextsector').click(function() {
+		process_sector();
+	}); 
 	
 	//debug rider data in console
 	$('#teams .rider').click(function() { 
@@ -141,7 +172,8 @@ $(document).ready(function() {
 <body>                                                                                 
 <div id="main">
 	 
-	<div id="locations"><h2>peloton</h2></div> 
+	<div id="locations"><h2>peloton</h2></div>  
+	<button id="nextsector">next sector &gt;</button>
 	<div id="sectors"><h2>sectors</h2></div>
 	<div id="teams">                              
 		<h2>teams</h2>
